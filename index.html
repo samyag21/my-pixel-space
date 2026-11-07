@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Roomfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-1">
+
+    <!-- Stardust Canvas -->
+    <canvas id="stardust"></canvas>
+
+    <!-- Reset Button -->
+    <button id="reset-btn">Reset View</button>
+
+    <!-- The Camera -->
+    <div class="scene" id="scene">
+        <!-- The 3D Room -->
+        <div class="room" id="room">
+            
+            <!-- Base -->
+            <div class="floor"></div>
+            
+            <!-- Walls -->
+            <div class="wall-left"></div>
+            <div class="wall-back"></div>
+
+            <!-- Window (On the back wall) -->
+            <div class="window">
+                <div class="sky"></div>
+                <div class="cloud cloud-1"></div>
+                <div class="cloud cloud-2"></div>
+            </div>
+
+            <!-- The Constellations (Ceiling) -->
+            <div class="constellation" id="constellation"></div>
+
+            <!-- The Desk Setup -->
+            <div class="desk">
+                <div class="monitor" id="monitor-btn">
+                    <div class="screen-text" id="monitor-screen">> whoami</div>
+                </div>
+                <div class="side-screen"></div>
+                <div class="keyboard"></div>
+                <div class="mug"></div>
+            </div>
+
+            <!-- Floating Typing Code -->
+            <div class="floating-code" id="code-block">
+                <span id="typing-text"></span><span class="cursor">_</span>
+            </div>
+
+            <!-- Neon Plant -->
+            <div class="plant">
+                <div class="pot"></div>
+                <div class="leaf leaf-1"></div>
+                <div class="leaf leaf-2"></div>
+                <div class="leaf leaf-3"></div>
+            </div>
+
+            <!-- Hidden Cat (Under the desk) -->
+            <div class="cat" id="cat-btn">
+                <div class="cat-body">🐱</div>
+                <div class="cat-tail"></div>
+            </div>
+
+            <!-- Interactive Wall Elements -->
+            <button class="frame" id="frame-btn">ABOUT</button>
+            
+            <!-- Lamp (Toggles Theme & Cursor) -->
+            <div class="lamp" id="lamp-btn">
+                <div class="lamp-glow"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- The Pop-out File Menu (Hidden by default) -->
+    <div class="file-menu" id="file-menu">
+        <div class="file-menu-content">
+            <button class="close-btn" id="close-file-menu">×</button>
+            <h2>root@room:~$ ls</h2>
+            <div class="file-list">
+                <div class="file file-1" id="file-1-btn">
+                    <span class="file-icon">📁</span> Interests.txt
+                </div>
+                <div class="file file-2" id="file-2-btn">
+                    <span class="file-icon">📁</span> Pursuing.txt
+                </div>
+                <div class="file file-3" id="file-3-btn">
+                    <span class="file-icon">📁</span> Skills.txt
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Main Modal (For Content) -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="close-btn">×</button>
+            <h2 id="modal-title">Title</h2>
+            <p id="modal-text">Content</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+/* --- 1. Base & Themes --- */
+:root {
+    --neon-cyan: #00f3ff;
+    --neon-magenta: #ff00ff;
+    --neon-purple: #7000ff;
+    --neon-yellow: #ffcc00;
+    --neon-green: #39ff14;
+    --neon-red: #ff003c;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body {
+    background-color: #050510; 
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+    color: white;
+    transition: background-color 0.8s ease;
+}
+
+/* --- Theme Variables --- */
+body.theme-1 { --bg-color: #050510; --room-dark: #111; --room-light: #2a2a2a; --wall-border: var(--neon-magenta); }
+body.theme-2 { --bg-color: #1a001a; --room-dark: #2d002d; --room-light: #3d003d; --wall-border: var(--neon-cyan); }
+body.theme-3 { --bg-color: #001a1a; --room-dark: #002d2d; --room-light: #003d3d; --wall-border: var(--neon-yellow); }
+body.theme-4 { --bg-color: #1a1a00; --room-dark: #2d2d00; --room-light: #3d3d00; --wall-border: var(--neon-purple); }
+
+body { background-color: var(--bg-color); }
+
+/* Stardust Canvas */
+#stardust {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 50;
+}
+
+/* Reset Button */
+#reset-btn {
+    position: fixed;
+    top: 20px; right: 20px;
+    background: transparent;
+    color: var(--neon-cyan);
+    border: 1px solid var(--neon-cyan);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    z-index: 200;
+    transition: all 0.3s;
+}
+
+#reset-btn:hover {
+    background: var(--neon-cyan);
+    color: #000;
+    box-shadow: 0 0 20px var(--neon-cyan);
+}
+
+/* --- 2. The 3D Camera --- */
+.scene {
+    width: 800px;
+    height: 800px;
+    perspective: 1500px;
+    cursor: grab;
+}
+
+.scene:active { 
+    cursor: grabbing; 
+}
+
+.room {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-35deg) rotateY(-45deg);
+    transition: transform 0.5s ease-out;
+}
+
+/* --- 3. Room Structure --- */
+.floor {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background-color: var(--room-dark);
+    background-image: 
+        linear-gradient(var(--neon-cyan) 1px, transparent 1px),
+        linear-gradient(90deg, var(--neon-cyan) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: center;
+    top: 100px; 
+    left: 100px;
+    transform: translateZ(0);
+    box-shadow: 0 0 100px rgba(0, 243, 255, 0.1) inset;
+    animation: floorPulse 4s infinite alternate;
+}
+
+@keyframes floorPulse {
+    0% { box-shadow: 0 0 50px rgba(0, 243, 255, 0.05) inset; }
+    100% { box-shadow: 0 0 100px rgba(0, 243, 255, 0.2) inset; }
+}
+
+.wall-back {
+    position: absolute;
+    width: 600px; 
+    height: 400px;
+    background-color: var(--room-light);
+    top: 100px; 
+    left: 100px;
+    transform-origin: top center;
+    transform: rotateX(90deg) translateY(-400px) translateZ(0);
+    border-bottom: 2px solid var(--wall-border);
+}
+
+.wall-left {
+    position: absolute;
+    width: 600px; 
+    height: 400px;
+    background-color: var(--room-dark);
+    top: 100px; 
+    left: 100px;
+    transform-origin: left center;
+    transform: rotateY(90deg) translateX(-600px) translateZ(0);
+    border-right: 2px solid var(--wall-border);
+}
+
+/* --- 4. Animated Window --- */
+.window {
+    position: absolute;
+    width: 180px; 
+    height: 220px;
+    background: #000;
+    top: 180px; 
+    left: 380px;
+    transform: rotateX(90deg) translateZ(-200px);
+    border: 4px solid #222;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.sky {
+    width: 100%; 
+    height: 100%;
+    background: linear-gradient(to bottom, var(--neon-purple), #000);
+}
+
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    filter: blur(10px);
+}
+
+.cloud-1 {
+    width: 100px; 
+    height: 40px;
+    top: 40px;
+    animation: moveClouds 10s linear infinite;
+}
+
+.cloud-2 {
+    width: 150px; 
+    height: 50px;
+    top: 100px;
+    animation: moveClouds 15s linear infinite reverse;
+}
+
+@keyframes moveClouds {
+    from { left: -200px; }
+    to { left: 200px; }
+}
+
+/* --- 5. Ceiling Constellations --- */
+.constellation {
+    position: absolute;
+    width: 600px; 
+    height: 600px;
+    top: 100px; 
+    left: 100px;
+    transform-origin: top center;
+    transform: rotateX(90deg) translateY(-600px) translateZ(0);
+    background-image: 
+        radial-gradient(circle, #fff 2px, transparent 2px),
+        radial-gradient(circle, #fff 1px, transparent 1px),
+        radial-gradient(circle, var(--neon-cyan) 3px, transparent 3px);
+    background-size: 80px 80px, 120px 120px, 200px 200px;
+    background-position: 0 0, 40px 60px, 130px 270px;
+    opacity: 0.3;
+    transition: opacity 0.8s ease;
+}
+
+/* --- 6. Desk & Hardware --- */
+.desk {
+    position: absolute;
+    width: 260px; 
+    height: 140px;
+    background-color: #1a1a1a;
+    top: 450px; 
+    left: 120px;
+    transform: translateZ(60px);
+    border-bottom: 10px solid #0a0a0a;
+    border-left: 2px solid var(--neon-magenta);
+    border-right: 2px solid var(--neon-magenta);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.8), 0 0 20px rgba(255, 0, 255, 0.2);
+}
+
+.monitor {
+    position: absolute;
+    width: 160px; 
+    height: 100px;
+    background-color: #000;
+    top: -105px; 
+    left: 50px;
+    border: 6px solid #111;
+    cursor: pointer;
+    transform: translateZ(10px);
+    border-radius: 6px;
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
+    z-index: 2;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.monitor:hover {
+    transform: translateZ(20px) scale(1.02);
+    box-shadow: 0 0 50px rgba(0, 243, 255, 0.8);
+}
+
+.screen-text {
+    background-color: #050505;
+    color: var(--neon-cyan);
+    width: 100%; 
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    text-shadow: 0 0 8px var(--neon-cyan);
+    transition: all 0.3s;
+}
+
+.screen-text.glitching {
+    color: var(--neon-red);
+    text-shadow: 0 0 10px var(--neon-red);
+    animation: glitchAnim 0.2s infinite;
+}
+
+@keyframes glitchAnim {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+.side-screen {
+    position: absolute;
+    width: 80px; 
+    height: 60px;
+    background: #050505;
+    top: -65px; 
+    right: -20px;
+    border: 4px solid #111;
+    transform: rotateY(-15deg) translateZ(10px);
+    border-radius: 4px;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+}
+
+.keyboard {
+    position: absolute;
+    width: 120px; 
+    height: 30px;
+    background: #111;
+    bottom: -20px; 
+    left: 70px;
+    transform: rotateX(60deg) translateZ(5px);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.mug {
+    position: absolute;
+    width: 20px; 
+    height: 25px;
+    background: #fff;
+    bottom: 10px; 
+    right: 20px;
+    border-radius: 2px 2px 5px 5px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* --- 7. Floating Typing Code --- */
+.floating-code {
+    position: absolute;
+    top: 200px; 
+    left: 150px;
+    transform: translateZ(150px) rotateY(20deg);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border: 1px solid var(--neon-cyan);
+    border-radius: 4px;
+    color: var(--neon-cyan);
+    font-size: 14px;
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+    min-width: 250px;
+}
+
+.cursor-blink {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* --- 8. Neon Plant --- */
+.plant {
+    position: absolute;
+    top: 500px; 
+    right: 100px;
+    transform: translateZ(30px);
+}
+
+.pot {
+    width: 40px; 
+    height: 40px;
+    background: #222;
+    border-radius: 0 0 10px 10px;
+    border-bottom: 4px solid var(--neon-magenta);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+}
+
+.leaf {
+    width: 30px; 
+    height: 30px;
+    background: var(--neon-cyan);
+    border-radius: 50% 0;
+    position: absolute;
+    top: -20px;
+    left: 5px;
+    transform-origin: bottom left;
+    animation: sway 3s infinite ease-in-out alternate;
+    box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.leaf-2 {
+    transform: rotate(45deg);
+    background: var(--neon-purple);
+    box-shadow: 0 0 15px var(--neon-purple);
+}
+
+.leaf-3 {
+    transform: rotate(90deg);
+    background: var(--neon-magenta);
+    box-shadow: 0 0 15px var(--neon-magenta);
+}
+
+@keyframes sway {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(15deg); }
+}
+
+/* --- 9. Hidden Cat --- */
+.cat {
+    position: absolute;
+    bottom: 20px; 
+    left: 140px;
+    transform: translateZ(10px);
+    cursor: pointer;
+    z-index: 10;
+}
+
+.cat-body {
+    font-size: 30px;
+    transition: transform 0.2s;
+}
+
+.cat:hover .cat-body {
+    transform: scale(1.2);
+}
+
+.cat-tail {
+    position: absolute;
+    width: 20px; 
+    height: 5px;
+    background: #ff9999;
+    bottom: 0; 
+    right: -15px;
+    border-radius: 5px;
+    transform-origin: left center;
+    animation: wag 1s infinite alternate;
+}
+
+@keyframes wag {
+    0% { transform: rotate(-20deg); }
+    100% { transform: rotate(20deg); }
+}
+
+/* --- 10. Interactive Elements --- */
+.frame {
+    position: absolute;
+    width: 120px; 
+    height: 80px;
+    background: #000;
+    border: 3px solid var(--neon-yellow);
+    top: 200px; 
+    left: 100px;
+    transform: rotateX(90deg) translateZ(-150px);
+    color: var(--neon-yellow);
+    font-size: 16px; 
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.frame:hover { 
+    background: rgba(255, 204, 0, 0.1);
+    box-shadow: 0 0 40px rgba(255, 204, 0, 0.8);
+}
+
+.lamp {
+    position: absolute;
+    width: 40px; 
+    height: 60px;
+    background: #222;
+    top: 400px; 
+    left: 400px;
+    border-radius: 20px 20px 0 0;
+    cursor: pointer;
+    transform: translateZ(50px);
+    border-bottom: 5px solid #000;
+}
+
+.lamp-glow {
+    position: absolute;
+    width: 100px; 
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+    top: 20px; 
+    left: -30px;
+    border-radius: 50%;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+/* --- 11. Modal & File Menu --- */
+.modal, .file-menu {
+    display: none;
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal-content, .file-menu-content {
+    background: rgba(10, 10, 15, 0.95);
+    padding: 40px;
+    border-radius: 8px;
+    width: 450px;
+    position: relative;
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px; 
+    right: 20px;
+    background: none; 
+    border: none;
+    color: var(--neon-cyan); 
+    font-size: 28px;
+    cursor: pointer;
+    transition: text-shadow 0.3s;
+}
+
+.close-btn:hover { 
+    text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.modal h2, .file-menu h2 { 
+    color: var(--neon-cyan); 
+    margin-bottom: 20px; 
+    text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* File Menu Specific Styles */
+.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.file {
+    width: 100%; 
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    gap: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 4px;
+    border: 1px solid #333;
+    background: #111;
+    transition: all 0.2s ease;
+}
+
+.file-icon {
+    font-size: 20px;
+}
+
+.file:hover {
+    transform: translateX(10px);
+    border-color: var(--neon-magenta);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+    color: var(--neon-magenta);
+}
+
+.file-1:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 243, 255, 0.3); }
+.file-2:hover { border-color: var(--neon-purple); color: var(--neon-purple); box-shadow: 0 0 20px rgba(112, 0, 255, 0.3); }
+.file-3:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); box-shadow: 0 0 20px rgba(255, 204, 0, 0.3); }
