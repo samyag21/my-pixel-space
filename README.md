@@ -10,7 +10,7 @@ https://samyag21.github.io/my-pixel-space/
 - 4 dynamic neon themes toggled via the lamp
 - Custom cursor particle effects based on the active theme
 - Interactive monitor with a glitch effect and file menu
-- Hidden easter eggs (cat under the desk)
+- cat under the desk
 - Day/Night mode toggle
 
 ## A Note on How This Was Built
